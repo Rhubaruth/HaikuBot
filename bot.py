@@ -7,7 +7,8 @@ from dotenv import load_dotenv
 
 import random
 import datetime as dt
-# import asyncio
+import haiku
+
 
 load_dotenv()
 TOKEN = os.getenv("DISCORD_TOKEN")
@@ -26,8 +27,7 @@ CHANNEL_BOT = 1081598357786603581
 utc = dt.timezone.utc
 HAIKU_TIMES = [
     dt.time(hour=11, minute=00, tzinfo=utc),
-    dt.time(hour=19, minute=00, tzinfo=utc),
-    dt.time(hour=19, minute=30, tzinfo=utc)
+    dt.time(hour=19, minute=00, tzinfo=utc)
     ]
 
 
@@ -92,4 +92,6 @@ class HaikuCog(commands.Cog):
     async def my_task(self):
         bot.get_guild(GUILD_ARUGULA)
         channel = bot.get_channel(CHANNEL_BOT)
-        await channel.send("I should write a Haiku")
+        h = haiku.create_haiku()
+        h = '\n'.join(h)
+        await channel.send(h)
