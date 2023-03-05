@@ -1,67 +1,46 @@
 import random
+from nltk import CFG
+from nltk.parse.generate import generate
 
-syl1 = ["one", "dive", "kiss", "blue", "give"]
-syl2 = ["purple", "driver", "silent", "aura"]
-syl3 = ["parachute", "understand", "subdivide"]
-syl4 = ["directory", "overwhelming", "termination", "avocado", "arugula"]
-syl5 = ["geometrical", "terminology", "deconstruction"]
-syl6 = ["disappriciated", "discontinuity"]
-syl7 = ["naturopathically", "encyclopedia"]
-
-SHORT = 5
-LONG = 7
-
-
-def create_line(length: int = 5) -> str:
-    line = ""
-    syllables = 0
-
-    while syllables < length:
-        word_syll = random.randint(1, length-syllables)
-        syllables += word_syll
-
-        match word_syll:
-            case 1:
-                random.shuffle(syl1)
-                line += syl1[0]
-
-            case 2:
-                random.shuffle(syl2)
-                line += syl2[0]
-
-            case 3:
-                random.shuffle(syl3)
-                line += syl3[0]
-
-            case 4:
-                random.shuffle(syl4)
-                line += syl4[0]
-
-            case 5:
-                random.shuffle(syl5)
-                line += syl5[0]
-
-            case 6:
-                random.shuffle(syl6)
-                line += syl6[0]
-
-            case 7:
-                random.shuffle(syl7)
-                line += syl7[0]
-        line += " "
-    return line
+haiku_grammar = CFG.fromstring("""
+    START -> SHORT '$' LONG '$' SHORT
+    SHORT -> \
+        '1' '1' '1' '1' '1' | \
+        '1' '1' '1' '2' | \
+        '1' '1' '2' '1' | \
+        '1' '2' '1' '1' | \
+        '2' '1' '1' '1' | \
+        '1' '2' '2' | \
+        '2' '1' '2' | \
+        '1' '2' '1' | \
+        '1' '1' '3' | \
+        '1' '3' '1' | \
+        '3' '1' '1' | \
+        '2' '3' | \
+        '3' '2'
+        
+    LONG -> \
+        SHORT '1' '1' |\
+        SHORT '2' |\
+        '1' '1' SHORT |\
+        '2' SHORT |\
+        '3' '3' '1' |\
+        '3' '1' '3' |\
+        '1' '3' '3'
+    """)
 
 
-def create_long():
-    line = "LONG LINE"
-    return line
-
-
-def create_haiku() -> [str, str, str]:
-    return [create_line(5), create_line(7), create_line(5)]
+def create_haiku():
+    productions = generate(haiku_grammar, depth=5)
+    rand_index = random.randint(0, sum(1 for _ in productions)-1)
+    for product in generate(haiku_grammar, depth=5):
+        if rand_index == 0:
+            return ' '.join(product)
+        rand_index -= 1
+    return []
 
 
 if __name__ == '__main__':
     print("Haiku time: ")
-    haiku = create_haiku()
+    haiku = [line.strip() for line in create_haiku().split('$')]
     print(*haiku, sep="\n")
