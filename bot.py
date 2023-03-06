@@ -93,5 +93,5 @@ class HaikuCog(commands.Cog):
         bot.get_guild(GUILD_ARUGULA)
         channel = bot.get_channel(CHANNEL_BOT)
         h = haiku.create_haiku()
-        h = '\n'.join(h)
+        h = '\n'.join(h.split('$'))
         await channel.send(h)
