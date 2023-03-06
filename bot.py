@@ -41,6 +41,11 @@ async def on_ready():
     await cog.cog_load()
 
 
+@bot.event
+async def on_message(message):
+    print(message)
+
+
 @bot.command(name='Hello', help='Will greet you')
 async def greet(ctx: discord.ext.commands.context.Context):
     server = ctx.message.guild
@@ -93,5 +98,5 @@ class HaikuCog(commands.Cog):
         bot.get_guild(GUILD_ARUGULA)
         channel = bot.get_channel(CHANNEL_BOT)
         h = haiku.create_haiku()
-        h = h.replace(' $ ', '\n')
+        h = '\n'.join(h)
         await channel.send(h)
