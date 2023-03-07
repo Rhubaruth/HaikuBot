@@ -1,24 +1,17 @@
-import os
-import sys
+
 
 import discord
 from discord.ext import commands, tasks
-from dotenv import load_dotenv
+
 
 import random
 import datetime as dt
 import haiku
 
 
-load_dotenv()
-TOKEN = os.getenv("DISCORD_TOKEN")
-if TOKEN is None:
-    print("Token is None")
-    sys.exit()
-
 intents = discord.Intents().all()
 client = discord.Client(intents=intents)
-bot = commands.Bot(command_prefix='!', intents=intents)
+bot = commands.Bot(command_prefix='', intents=intents)
 
 GUILD_ARUGULA = 1081598295824158842
 CHANNEL_BOT = 1081598357786603581
@@ -41,12 +34,12 @@ async def on_ready():
     await cog.cog_load()
 
 
-@bot.event
-async def on_message(message):
-    print(message)
+# @bot.event
+# async def on_message(message):
+#     print(message)
 
 
-@bot.command(name='Hello', help='Will greet you')
+@bot.command(name='hello', help='Will greet you')
 async def greet(ctx: discord.ext.commands.context.Context):
     server = ctx.message.guild
     await ctx.send(f'Hello {ctx.message.author.name}')

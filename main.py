@@ -1,5 +1,11 @@
 import bot
-import asyncio
+
+import os
+import sys
+from dotenv import load_dotenv
+
+load_dotenv()
+TOKEN = os.getenv("DISCORD_TOKEN")
 
 
 def print_hi(name):
@@ -9,5 +15,8 @@ def print_hi(name):
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
+    if TOKEN is None:
+        print("Token is None")
+        sys.exit()
     # print_hi('PyCharm')
-    bot.bot.run(bot.TOKEN)
+    bot.bot.run(TOKEN)
