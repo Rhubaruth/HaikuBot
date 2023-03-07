@@ -1,5 +1,3 @@
-
-
 import discord
 from discord.ext import commands, tasks
 
@@ -11,7 +9,7 @@ import haiku
 
 intents = discord.Intents().all()
 client = discord.Client(intents=intents)
-bot = commands.Bot(command_prefix='', intents=intents)
+bot = commands.Bot(command_prefix='!', intents=intents)
 
 GUILD_ARUGULA = 1081598295824158842
 CHANNEL_BOT = 1081598357786603581
@@ -19,7 +17,9 @@ CHANNEL_BOT = 1081598357786603581
 ''' !!! ALL TIMES ARE IN UTC -> +0:00 '''
 utc = dt.timezone.utc
 HAIKU_TIMES = [
+    dt.time(hour=8,  minute=30, tzinfo=utc),
     dt.time(hour=11, minute=00, tzinfo=utc),
+    dt.time(hour=15, minute=15, tzinfo=utc),
     dt.time(hour=19, minute=00, tzinfo=utc)
     ]
 
@@ -34,16 +34,13 @@ async def on_ready():
     await cog.cog_load()
 
 
-# @bot.event
-# async def on_message(message):
-#     print(message)
-
-
 @bot.command(name='hello', help='Will greet you')
 async def greet(ctx: discord.ext.commands.context.Context):
     server = ctx.message.guild
-    await ctx.send(f'Hello {ctx.message.author.name}')
-    print(f'{server}, {type(ctx)}')
+    senders_name = ctx.message.author.name
+    senders_nick = ctx.message.author.nick
+    await ctx.send(f'Hello {senders_nick if senders_nick is not None else senders_name}')
+    # print(f'{server}, {type(ctx)}')
 
 
 @bot.command(name='commands', help='Will help you probably')
