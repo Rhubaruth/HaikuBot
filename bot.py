@@ -1,17 +1,23 @@
-import discord
+from discord import app_commands
 from discord.ext import commands, tasks
-
+import discord
 
 import random
 import datetime as dt
+
+import cmds.mention
 import haiku
 
+from cmds import *
 
 intents = discord.Intents().all()
 client = discord.Client(intents=intents)
-bot = commands.Bot(command_prefix='!', intents=intents)
+bot = commands.Bot(command_prefix='/', intents=intents)
 
-GUILD_ARUGULA = 1081598295824158842
+# tree = app_commands.CommandTree(bot)
+
+GUILD_ARUGULA_ID = 1081598295824158842
+GUILD_ARUGULA = discord.Object(id=GUILD_ARUGULA_ID)
 CHANNEL_BOT = 1081598357786603581
 
 ''' !!! ALL TIMES ARE IN UTC -> +0:00 '''
@@ -32,6 +38,11 @@ async def on_ready():
     await bot.add_cog(HaikuCog(bot))
     cog = bot.get_cog("HaikuCog")
     await cog.cog_load()
+
+    await cmds.mention.setup(bot, GUILD_ARUGULA)
+
+
+    await bot.tree.sync(guild=GUILD_ARUGULA)
 
 
 @bot.command(name='hello', help='Will greet you')
@@ -77,15 +88,15 @@ async def random_members(guild, n):
 class HaikuCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.my_task.start()
+        # self.haiku_task.start()
         print("Cog Initialized")
 
     def cog_unload(self):
-        self.my_task.cancel()
+        self.haiku_task.cancel()
 
     @tasks.loop(time=HAIKU_TIMES)   # scheduling task runs daily
-    async def my_task(self):
-        bot.get_guild(GUILD_ARUGULA)
+    async def haiku_task(self):
+        bot.get_guild(GUILD_ARUGULA.id)
         channel = bot.get_channel(CHANNEL_BOT)
         h = haiku.create_haiku()
         h = '\n'.join(h)

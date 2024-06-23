@@ -1,8 +1,9 @@
-import bot
+from bot import bot
 
 import os
 import sys
 from dotenv import load_dotenv
+
 
 load_dotenv()
 TOKEN = os.getenv("DISCORD_TOKEN")
@@ -19,4 +20,4 @@ if __name__ == '__main__':
         print("Token is None")
         sys.exit()
     # print_hi('PyCharm')
-    bot.bot.run(TOKEN)
+    bot.run(TOKEN)
